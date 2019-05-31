@@ -17,7 +17,7 @@ public interface MapperComponent<T, S> {
      * @param elementT
      * @return elemento tipo S
      */
-    Optional<S> mapDtoToDao(T elementT);
+    Optional<S> mapDtoToDao(T elementT) throws Exception;
 
     /**
      * Mapea una lista de elementos del tipo S a una lista de elementos del tipo T.
@@ -31,5 +31,5 @@ public interface MapperComponent<T, S> {
      * @param elementT
      * @return
      */
-    List<S> mapDtoToDao(List<T> elementT);
+    List<S> mapDtoToDao(List<T> elementT) throws Exception;
 }

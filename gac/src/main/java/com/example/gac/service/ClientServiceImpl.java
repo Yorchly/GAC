@@ -1,8 +1,11 @@
 package com.example.gac.service;
 
 import com.example.gac.model.Client;
+import com.example.gac.model.dto.ClientDto;
 import com.example.gac.model.repository.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,22 +22,25 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public Optional<Client> update(Client client) {
+    public ResponseEntity<ClientDto> update(Client client) {
         if(repository.findById(client.getId()).isPresent())
-            return Optional.ofNullable(repository.save(client));
+        {
+            repository.save(client);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
         else
-            return Optional.empty();
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @Override
-    public Optional<Client> delete(Client client) {
+    public ResponseEntity<ClientDto> delete(Client client) {
         if(repository.findById(client.getId()).isPresent())
         {
             repository.delete(client);
-            return Optional.of(client);
+            return new ResponseEntity<>(HttpStatus.OK);
         }
         else
-            return Optional.empty();
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @Override
