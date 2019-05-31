@@ -24,7 +24,9 @@ public class Rent {
 
     private Double rentPrice;
 
-    @ManyToOne Client client;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Client client;
 
-    @ManyToOne Car car;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Car car;
 }

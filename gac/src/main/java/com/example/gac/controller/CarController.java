@@ -18,9 +18,9 @@ import java.util.Optional;
 @RequestMapping("/car")
 public class CarController {
 
-    @Autowired CarMapperImpl mapper;
+    @Autowired private CarMapperImpl mapper;
 
-    @Autowired CarServiceImpl service;
+    @Autowired private CarServiceImpl service;
 
     @GetMapping
     public List<CarDto> get()
@@ -48,7 +48,7 @@ public class CarController {
                 .flatMap(service::create)
                 .flatMap(mapper::mapDaoToDto)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElse(ResponseEntity.badRequest().build());
 
     }
 

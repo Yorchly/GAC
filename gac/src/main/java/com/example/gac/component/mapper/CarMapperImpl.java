@@ -27,7 +27,7 @@ public class CarMapperImpl implements MapperComponent<CarDto, Car> {
     @Override
     public Optional<Car> mapDtoToDao(CarDto elementT)
     {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d-M-[uuuu][uu]");
         if(Optional.ofNullable(elementT).isPresent())
             return Optional.of(new Car(elementT.getId(), elementT.getCarPlate(),
                     LocalDate.parse(elementT.getRegistrationYear(), formatter)));

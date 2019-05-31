@@ -49,7 +49,7 @@ public class ClientController {
                 .flatMap(service::create)
                 .flatMap(mapper::mapDaoToDto)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElse(ResponseEntity.badRequest().build());
 
     }
 

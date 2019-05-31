@@ -27,9 +27,9 @@ public class Car {
 
     private String colour;
 
-    @OneToMany(mappedBy = "car", fetch = FetchType.LAZY) Set<Rent> rents = new HashSet<>();
+    @OneToMany(mappedBy = "car", fetch = FetchType.LAZY) private Set<Rent> rents = new HashSet<>();
 
-    @ManyToMany(mappedBy = "cars", fetch = FetchType.LAZY) Set<Rate> rates = new HashSet<>();
+    @ManyToMany(mappedBy = "cars", fetch = FetchType.LAZY) private Set<Rate> rates = new HashSet<>();
 
     // Constructor para cuando se mapea el DTO a DAO
     public Car(Integer id, String carPlate, LocalDate registrationYear)
