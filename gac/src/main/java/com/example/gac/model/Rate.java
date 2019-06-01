@@ -26,4 +26,13 @@ public class Rate {
     private LocalDate endDate;
 
     @ManyToMany(fetch = FetchType.LAZY) Set<Car> cars = new HashSet<>();
+
+    // Constructor para mapear el DTO a DAO
+    public Rate(Integer id, Double price, LocalDate startDate, LocalDate endDate)
+    {
+        this.id = id;
+        this.price = price;
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
 }

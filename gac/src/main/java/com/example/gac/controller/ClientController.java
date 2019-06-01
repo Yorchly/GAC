@@ -20,9 +20,9 @@ public class ClientController {
 
     // Mapper se mantiene en el controlador, es en el controlador donde se trabaja con dto mientras
     // que en los servicios se trabaja con Entities ya que es la lógica de negocios.
-    @Autowired ClientMapperImpl mapper;
+    @Autowired private ClientMapperImpl mapper;
 
-    @Autowired ClientServiceImpl service;
+    @Autowired private ClientServiceImpl service;
 
     @GetMapping
     public List<ClientDto> get()
