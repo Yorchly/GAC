@@ -11,9 +11,6 @@ import java.util.Optional;
 public interface ClientRepository extends JpaRepository<Client, Integer> {
     List<Client> findAllByName(String name);
 
-    List<Client> findAllBySurname(String surname);
+    List<Client> findAllByDni(String dni);
 
-    Optional<Client> findByDni(String dni);
-
-    List<Client> findAllByLocation(String location);
 }

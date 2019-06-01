@@ -1,15 +1,16 @@
 package com.example.gac.controller;
 
 import com.example.gac.component.mapper.ClientMapperImpl;
-import com.example.gac.model.Client;
 import com.example.gac.model.dto.ClientDto;
 import com.example.gac.service.ClientServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.ValidationException;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,9 +26,19 @@ public class ClientController {
     @Autowired private ClientServiceImpl service;
 
     @GetMapping
-    public List<ClientDto> get()
+    public Page<ClientDto> get(Pageable pageable,
+                               @RequestParam(value = "name", required = false) String name,
+                               @RequestParam(value = "dni", required = false) String dni)
     {
-        return mapper.mapDaoToDto(service.findAll());
+        List<ClientDto> list;
+        if(Optional.ofNullable(name).isPresent())
+            list = mapper.mapDaoToDto(service.findAllByName(name));
+        else if(Optional.ofNullable(dni).isPresent())
+            list = mapper.mapDaoToDto(service.findAllByDni(dni));
+        else
+            list = mapper.mapDaoToDto(service.findAll());
+
+        return new PageImpl<>(list, pageable, list.size());
     }
 
     @GetMapping("/{id}")
@@ -39,7 +50,6 @@ public class ClientController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
-
 
     @PostMapping
     public ResponseEntity<ClientDto> create(@RequestBody ClientDto clientDto)
@@ -72,4 +82,5 @@ public class ClientController {
         else
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
+
 }

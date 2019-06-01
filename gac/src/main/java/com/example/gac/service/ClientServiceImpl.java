@@ -1,7 +1,9 @@
 package com.example.gac.service;
 
 import com.example.gac.model.Client;
+import com.example.gac.model.Rent;
 import com.example.gac.model.dto.ClientDto;
+import com.example.gac.model.dto.RentDto;
 import com.example.gac.model.repository.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,10 +18,13 @@ public class ClientServiceImpl implements ClientService {
 
     @Autowired private ClientRepository repository;
 
+    @Autowired private RentServiceImpl rentService;
+
     @Override
     public Optional<Client> create(Client client) {
         return Optional.ofNullable(repository.save(client));
     }
+
 
     @Override
     public ResponseEntity<ClientDto> update(Client client) {
@@ -32,6 +37,7 @@ public class ClientServiceImpl implements ClientService {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+
     @Override
     public ResponseEntity<ClientDto> delete(Client client) {
         if(repository.findById(client.getId()).isPresent())
@@ -43,13 +49,26 @@ public class ClientServiceImpl implements ClientService {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+
     @Override
     public Optional<Client> findOne(Integer id) {
         return repository.findById(id);
     }
 
+
     @Override
     public List<Client> findAll() {
         return repository.findAll();
     }
+
+    @Override
+    public List<Client> findAllByName(String name) {
+        return repository.findAllByName(name);
+    }
+
+    @Override
+    public List<Client> findAllByDni(String dni) {
+        return repository.findAllByDni(dni);
+    }
+
 }

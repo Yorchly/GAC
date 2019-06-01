@@ -1,16 +1,18 @@
 package com.example.gac.controller;
 
 import com.example.gac.component.mapper.CarMapperImpl;
-import com.example.gac.model.Car;
 import com.example.gac.model.dto.CarDto;
 import com.example.gac.service.CarServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.swing.text.html.Option;
-import javax.validation.ValidationException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,9 +25,23 @@ public class CarController {
     @Autowired private CarServiceImpl service;
 
     @GetMapping
-    public List<CarDto> get()
+    public Page<CarDto> get(Pageable pageable,
+                            @RequestParam(value = "carPlate", required = false) String carPlate,
+                            @RequestParam(value = "registrationYear", required = false) String registrationYear)
     {
-        return mapper.mapDaoToDto(service.findAll());
+        List<CarDto> list;
+
+        if(Optional.ofNullable(carPlate).isPresent())
+            list = mapper.mapDaoToDto(service.findAllByCarPlate(carPlate));
+        else if(Optional.ofNullable(registrationYear).isPresent())
+        {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d-M-[uuuu][uu]");
+            list = mapper.mapDaoToDto(service.findAllByRegistrationYear(LocalDate.parse(registrationYear, formatter)));
+        }
+        else
+            list = mapper.mapDaoToDto(service.findAll());
+
+        return new PageImpl<>(list, pageable, list.size());
     }
 
     @GetMapping("{id}")

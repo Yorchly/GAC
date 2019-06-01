@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,5 +54,15 @@ public class CarServiceImpl implements CarService {
     @Override
     public List<Car> findAll() {
         return repository.findAll();
+    }
+
+    @Override
+    public List<Car> findAllByCarPlate(String carPlate) {
+        return repository.findAllByCarPlate(carPlate);
+    }
+
+    @Override
+    public List<Car> findAllByRegistrationYear(LocalDate registrationYear) {
+        return repository.findAllByRegistrationYear(registrationYear);
     }
 }

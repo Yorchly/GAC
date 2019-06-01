@@ -4,6 +4,7 @@ import com.example.gac.model.Car;
 import com.example.gac.model.dto.CarDto;
 import org.springframework.http.ResponseEntity;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,4 +42,18 @@ public interface CarService {
      * @return
      */
     List<Car> findAll();
+
+    /**
+     * Encuentra el coche que coincide con la matricula pasada como argumento.
+     * @param carPlate
+     * @return
+     */
+    List<Car> findAllByCarPlate(String carPlate);
+
+    /**
+     * Encuentra la lista de coches que coinciden con el año de registro pasado como argumento.
+     * @param registrationYear
+     * @return
+     */
+    List<Car> findAllByRegistrationYear(LocalDate registrationYear);
 }

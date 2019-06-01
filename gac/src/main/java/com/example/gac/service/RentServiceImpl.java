@@ -1,5 +1,7 @@
 package com.example.gac.service;
 
+import com.example.gac.model.Car;
+import com.example.gac.model.Client;
 import com.example.gac.model.Rent;
 import com.example.gac.model.dto.RentDto;
 import com.example.gac.model.repository.RentRepository;
@@ -8,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -79,5 +83,38 @@ public class RentServiceImpl implements RentService {
     @Override
     public List<Rent> findAll() {
         return repository.findAll();
+    }
+
+    @Override
+    public List<Rent> findAllByStartDate(LocalDate startDate) {
+        return repository.findAllByStartDate(startDate);
+    }
+
+    @Override
+    public List<Rent> findAllByEndDate(LocalDate endDate) {
+        return repository.findAllByEndDate(endDate);
+    }
+
+    @Override
+    public List<Rent> findAllByRentPrice(Double price) {
+        return repository.findAllByRentPrice(price);
+    }
+
+    @Override
+    public List<Rent> findAllByClient(Integer clientId)
+    {
+        if(clientService.findOne(clientId).isPresent())
+            return repository.findAllByClient(clientService.findOne(clientId).get());
+        else
+            return new ArrayList<>();
+    }
+
+    @Override
+    public List<Rent> findAllByCar(Integer carId)
+    {
+        if(carService.findOne(carId).isPresent())
+            return repository.findAllByCar(carService.findOne(carId).get());
+        else
+            return new ArrayList<>();
     }
 }

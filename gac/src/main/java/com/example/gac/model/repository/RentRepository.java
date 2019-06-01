@@ -7,17 +7,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
 public interface RentRepository extends JpaRepository<Rent, Integer> {
-    List<Rent> findAllByStartDate(String startDate);
+    List<Rent> findAllByStartDate(LocalDate startDate);
 
-    List<Rent> findAllByEndDate(String endDate);
-
-    List<Rent> findAllByStartDateBetween(String startDate, String endDate);
-
-    List<Rent> findAllByEndDateBetween(String startDate, String endDate);
+    List<Rent> findAllByEndDate(LocalDate endDate);
 
     List<Rent> findAllByRentPrice(Double price);
 

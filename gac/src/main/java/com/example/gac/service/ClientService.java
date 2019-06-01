@@ -1,6 +1,7 @@
 package com.example.gac.service;
 
 import com.example.gac.model.Client;
+import com.example.gac.model.Rent;
 import com.example.gac.model.dto.ClientDto;
 import org.springframework.http.ResponseEntity;
 
@@ -41,4 +42,21 @@ public interface ClientService {
      * @return
      */
     List<Client> findAll();
+
+
+    /**
+     * Encuentra todos los clientes que coincidan con el nombre pasado como argumento.
+     * @param name
+     * @return
+     */
+    List<Client> findAllByName(String name);
+
+
+    /**
+     * Suponiendo que el DNI no es único, encuentra la lista de todos los usuarios con el mismo DNI.
+     * @param dni
+     * @return
+     */
+    List<Client> findAllByDni(String dni);
+
 }
