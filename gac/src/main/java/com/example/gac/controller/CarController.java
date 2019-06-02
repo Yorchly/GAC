@@ -68,6 +68,13 @@ public class CarController {
 
     }
 
+    @PostMapping("/{idCar}/rate/{idRate}")
+    public ResponseEntity<CarDto> relateCarAndRate(@PathVariable("idCar") Integer idCar,
+                                                   @PathVariable("idRate") Integer idRate)
+    {
+        return service.relateCarAndRate(idCar, idRate);
+    }
+
     @PutMapping
     public ResponseEntity<CarDto> update(@RequestBody CarDto clientDto)
     {

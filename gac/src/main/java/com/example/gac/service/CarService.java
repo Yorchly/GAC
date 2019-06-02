@@ -56,4 +56,12 @@ public interface CarService {
      * @return
      */
     List<Car> findAllByRegistrationYear(LocalDate registrationYear);
+
+    /**
+     * Relaciona un coche con una renta. Ambos deben estar previamente creados.
+     * @param idCar
+     * @param idRate
+     * @return
+     */
+    ResponseEntity<CarDto> relateCarAndRate(Integer idCar, Integer idRate);
 }

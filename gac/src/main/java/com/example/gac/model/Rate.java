@@ -6,7 +6,9 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -25,7 +27,7 @@ public class Rate {
 
     private LocalDate endDate;
 
-    @ManyToMany(fetch = FetchType.LAZY) Set<Car> cars = new HashSet<>();
+    @ManyToMany(fetch = FetchType.LAZY) List<Car> cars = new ArrayList<>();
 
     // Constructor para mapear el DTO a DAO
     public Rate(Integer id, Double price, LocalDate startDate, LocalDate endDate)

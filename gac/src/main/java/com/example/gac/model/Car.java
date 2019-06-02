@@ -6,7 +6,9 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -29,7 +31,7 @@ public class Car {
 
     @OneToMany(mappedBy = "car", fetch = FetchType.LAZY) private Set<Rent> rents = new HashSet<>();
 
-    @ManyToMany(mappedBy = "cars", fetch = FetchType.LAZY) private Set<Rate> rates = new HashSet<>();
+    @ManyToMany(cascade = CascadeType.MERGE, mappedBy = "cars", fetch = FetchType.LAZY) private List<Rate> rates = new ArrayList<>();
 
     // Constructor para cuando se mapea el DTO a DAO
     public Car(Integer id, String carPlate, LocalDate registrationYear)

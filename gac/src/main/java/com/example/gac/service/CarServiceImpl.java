@@ -1,21 +1,26 @@
 package com.example.gac.service;
 
 import com.example.gac.model.Car;
+import com.example.gac.model.Rate;
 import com.example.gac.model.dto.CarDto;
 import com.example.gac.model.repository.CarRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class CarServiceImpl implements CarService {
 
-    @Autowired CarRepository repository;
+    @Autowired private CarRepository repository;
+
+    @Autowired private RateServiceImpl rateService;
 
     @Override
     public Optional<Car> create(Car car) {
@@ -64,5 +69,39 @@ public class CarServiceImpl implements CarService {
     @Override
     public List<Car> findAllByRegistrationYear(LocalDate registrationYear) {
         return repository.findAllByRegistrationYear(registrationYear);
+    }
+
+    @Override
+    public ResponseEntity<CarDto> relateCarAndRate(Integer idCar, Integer idRate)
+    {
+        // Si cualquiera de los dos es nulo no se puede hacer la relacion por lo que se devuelve un error.
+        if(!repository.findById(idCar).isPresent() || !rateService.findOne(idRate).isPresent())
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        else
+        {
+            Car car = repository.findById(idCar).get();
+            Rate rate = rateService.findOne(idRate).get();
+            boolean found = false;
+
+            // Busca si hay algun alquiler ya vinculado con ese coche en la misma fecha o si el mismo alquiler que se
+            // está pasando ya está vinculado al coche, si es asi da un error.
+            for(Rate r: car.getRates())
+                if(r.getStartDate().equals(rate.getStartDate()) || r.equals(rate))
+                {
+                    found = true;
+                    break;
+                }
+
+            if(found)
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            else
+            {
+                // La relación es bidireccional asi que solo hace falta guardarlo en uno de los extremos.
+                rate.getCars().add(car);
+                rateService.create(rate);
+
+                return new ResponseEntity<>(HttpStatus.OK);
+            }
+        }
     }
 }
