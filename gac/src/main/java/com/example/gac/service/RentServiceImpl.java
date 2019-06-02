@@ -6,6 +6,7 @@ import com.example.gac.model.Rate;
 import com.example.gac.model.Rent;
 import com.example.gac.model.dto.RentDto;
 import com.example.gac.model.repository.RentRepository;
+import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,18 @@ public class RentServiceImpl implements RentService {
 
     @Autowired private ClientServiceImpl clientService;
 
+    // Esta función comprueba si dos fechas son iguales. Cuando se saca de la base de datos la fecha aparece como que al
+    // dia se le ha restado 1. A la hora de comparar es un problema.
+    private boolean checkDates(LocalDate date1, LocalDate date2)
+    {
+        boolean iguales = false;
+        if(date1.equals(date2) || (LocalDate.of(date1.getYear(), date1.getMonthValue(), date1.getDayOfMonth()+1)
+                .equals(LocalDate.of(date2.getYear(), date2.getMonthValue(), date2.getDayOfMonth()))))
+            iguales = true;
+
+        return iguales;
+    }
+
     @Override
     public Optional<Rent> create(Rent rent)
     {
@@ -36,10 +49,14 @@ public class RentServiceImpl implements RentService {
         // Se comprueba si el coche ya está alquilado para la fecha de inicio.
         List<Rent> list = repository.findAll();
         for(Rent r: list)
-            if(r.getStartDate().equals(rent.getStartDate()) && r.getCar().equals(rent.getCar()))
+            // Debido a que la relación está puesta como lazy lo que se obtiene al hacer un r.getCar() es un proxy,
+            // no el objeto de la clase por lo que comparar usando equals no es la mejor opción. Comparar con la ID
+            // debería ser suficiente ya que se supone única.
+            if(r.getStartDate().plusDays(1).equals(rent.getStartDate()) &&
+                    r.getCar().getId().equals(rent.getCar().getId()))
             {
-                returnEmpty = true;
-                break;
+                    returnEmpty = true;
+                    break;
             }
 
         if(returnEmpty)
