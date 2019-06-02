@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -108,5 +109,17 @@ public class CarServiceImpl implements CarService {
                 return new ResponseEntity<>(HttpStatus.OK);
             }
         }
+    }
+
+    @Override
+    public Optional<Car> findCarMoreProfitableInADate(LocalDate date1, LocalDate date2) {
+        List<Car> list = repository.findCarMoreProfitableInADate(date1, date2);
+
+        // Si la lista no está vacía se coge el primero elemento ya que están en orden descendente por lo que
+        // el coche con mayor precio estará el primero.
+        if(!list.isEmpty())
+            return Optional.of(list.get(0));
+        else
+            return Optional.empty();
     }
 }

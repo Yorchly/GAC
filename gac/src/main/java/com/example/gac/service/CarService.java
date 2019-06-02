@@ -64,4 +64,12 @@ public interface CarService {
      * @return
      */
     ResponseEntity<CarDto> relateCarAndRate(Integer idCar, Integer idRate);
+
+    /**
+     * Encuentra el coche más rentable en el período entre las dos fechas pasadas como argumento.
+     * @param date1
+     * @param date2
+     * @return
+     */
+    Optional<Car> findCarMoreProfitableInADate(LocalDate date1, LocalDate date2);
 }

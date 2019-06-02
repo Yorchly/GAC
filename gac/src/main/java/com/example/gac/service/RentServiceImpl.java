@@ -40,7 +40,8 @@ public class RentServiceImpl implements RentService {
             // Debido a que la relación está puesta como lazy lo que se obtiene al hacer un r.getCar() es un proxy,
             // no el objeto de la clase por lo que comparar usando equals no es la mejor opción. Comparar con la ID
             // debería ser suficiente ya que se supone única.
-            if(r.getStartDate().plusDays(1).equals(rent.getStartDate()) &&
+            if((r.getStartDate().equals(rent.getStartDate()) ||
+                    r.getStartDate().plusDays(1).equals(rent.getStartDate())) &&
                     r.getCar().getId().equals(rent.getCar().getId()))
             {
                     returnEmpty = true;

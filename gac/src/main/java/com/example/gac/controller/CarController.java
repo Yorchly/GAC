@@ -24,6 +24,12 @@ public class CarController {
 
     @Autowired private CarServiceImpl service;
 
+    private LocalDate mapStringToDate(String date)
+    {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d-M-[uuuu][uu]");
+        return LocalDate.parse(date, formatter);
+    }
+
     @GetMapping
     public Page<CarDto> get(Pageable pageable,
                             @RequestParam(value = "carPlate", required = false) String carPlate,
@@ -53,6 +59,36 @@ public class CarController {
                 .flatMap(mapper::mapDaoToDto)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/moreProfitable")
+    public ResponseEntity<CarDto> findCarMoreProfitableInADate(@RequestParam(value="startDate") String starDate,
+                                                               @RequestParam(value="endDate") String endDate)
+    {
+        boolean badRequest = false;
+        // Se inicializan a la fecha actual porque puede que nunca llegue a entrar en el if que los inicializa asi que
+        // da error.
+        LocalDate start = LocalDate.now();
+        LocalDate end = LocalDate.now();
+
+        if(Optional.ofNullable(starDate).isPresent() && Optional.ofNullable(endDate).isPresent())
+        {
+            start = mapStringToDate(starDate);
+            end = mapStringToDate(endDate);
+
+            if(start.isAfter(end))
+                badRequest = true;
+        }
+        else
+            badRequest = true;
+
+        if(badRequest)
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        else
+            return service.findCarMoreProfitableInADate(start, end).
+                    flatMap(mapper::mapDaoToDto)
+                    .map(ResponseEntity::ok)
+                    .orElse(ResponseEntity.notFound().build());
     }
 
 

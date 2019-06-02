@@ -22,6 +22,6 @@ public interface CarRepository extends JpaRepository<Car, Integer> {
 
     List<Car> findByRates(List<Rate> rates);
 
-//    @Query("")
-//    Optional<Car> findCarMoreProfitableInADate(String date);
+    @Query(value = "select c from Car c join c.rents r where r.startDate between ?1 and ?2 order by r.rentPrice desc")
+    List<Car> findCarMoreProfitableInADate(LocalDate startDate, LocalDate endDate);
 }
