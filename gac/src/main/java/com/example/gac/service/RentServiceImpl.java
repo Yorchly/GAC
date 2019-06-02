@@ -26,18 +26,6 @@ public class RentServiceImpl implements RentService {
 
     @Autowired private ClientServiceImpl clientService;
 
-    // Esta función comprueba si dos fechas son iguales. Cuando se saca de la base de datos la fecha aparece como que al
-    // dia se le ha restado 1. A la hora de comparar es un problema.
-    private boolean checkDates(LocalDate date1, LocalDate date2)
-    {
-        boolean iguales = false;
-        if(date1.equals(date2) || (LocalDate.of(date1.getYear(), date1.getMonthValue(), date1.getDayOfMonth()+1)
-                .equals(LocalDate.of(date2.getYear(), date2.getMonthValue(), date2.getDayOfMonth()))))
-            iguales = true;
-
-        return iguales;
-    }
-
     @Override
     public Optional<Rent> create(Rent rent)
     {
