@@ -12,15 +12,10 @@ import java.util.Optional;
 
 @Repository
 public interface CarRepository extends JpaRepository<Car, Integer> {
-    List<Car> findByBrand(String brand);
 
     List<Car> findAllByCarPlate(String carPlate);
 
     List<Car> findAllByRegistrationYear(LocalDate registrationYear);
-
-    List<Car> findByColour(String colour);
-
-    List<Car> findByRates(List<Rate> rates);
 
     @Query(value = "select c from Car c join c.rents r where r.startDate between ?1 and ?2 order by r.rentPrice desc")
     List<Car> findCarMoreProfitableInADate(LocalDate startDate, LocalDate endDate);

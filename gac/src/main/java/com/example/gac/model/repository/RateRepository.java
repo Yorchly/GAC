@@ -8,13 +8,4 @@ import java.util.List;
 
 @Repository
 public interface RateRepository extends JpaRepository<Rate, Integer> {
-    List<Rate> findAllByStartDate(String startDate);
-
-    List<Rate> findAllByEndDate(String endDate);
-
-    List<Rate> findAllByStartDateBetween(String startDate, String endDate);
-
-    List<Rate> findAllByEndDateBetween(String startDate, String endDate);
-
-    List<Rate> findAllByPrice(Double price);
 }
