@@ -21,8 +21,12 @@ public class ClientServiceImpl implements ClientService {
     @Autowired private RentServiceImpl rentService;
 
     @Override
-    public Optional<Client> create(Client client) {
-        return Optional.ofNullable(repository.save(client));
+    public Optional<Client> create(Client client)
+    {
+        if(repository.findById(client.getId()).isPresent())
+            return Optional.empty();
+        else
+            return Optional.ofNullable(repository.save(client));
     }
 
 

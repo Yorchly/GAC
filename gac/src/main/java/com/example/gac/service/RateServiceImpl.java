@@ -17,8 +17,12 @@ public class RateServiceImpl implements RateService {
     @Autowired RateRepository repository;
 
     @Override
-    public Optional<Rate> create(Rate rate) {
-        return Optional.ofNullable(repository.save(rate));
+    public Optional<Rate> create(Rate rate)
+    {
+        if(repository.findById(rate.getId()).isPresent())
+            return Optional.empty();
+        else
+            return Optional.ofNullable(repository.save(rate));
     }
 
     @Override

@@ -23,8 +23,13 @@ public class CarServiceImpl implements CarService {
     @Autowired private RateServiceImpl rateService;
 
     @Override
-    public Optional<Car> create(Car car) {
-        return Optional.ofNullable(repository.save(car));
+    public Optional<Car> create(Car car)
+    {
+        // Se comprueba que no se esté intentando actualizar mediante el método POST.
+        if(repository.findById(car.getId()).isPresent())
+            return Optional.empty();
+        else
+            return Optional.ofNullable(repository.save(car));
     }
 
     @Override

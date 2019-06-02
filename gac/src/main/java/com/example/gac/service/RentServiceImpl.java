@@ -2,6 +2,7 @@ package com.example.gac.service;
 
 import com.example.gac.model.Car;
 import com.example.gac.model.Client;
+import com.example.gac.model.Rate;
 import com.example.gac.model.Rent;
 import com.example.gac.model.dto.RentDto;
 import com.example.gac.model.repository.RentRepository;
@@ -27,19 +28,50 @@ public class RentServiceImpl implements RentService {
     @Override
     public Optional<Rent> create(Rent rent)
     {
-        // Comprueba si el coche enviado con rent no es nulo y si no está presente en la base de datos
-        // lo crea.
-        if(Optional.ofNullable(rent.getCar()).isPresent())
-            if (!carService.findOne(rent.getCar().getId()).isPresent())
-                carService.create(rent.getCar());
+        boolean returnEmpty = false;
+        // Se comprueba que no se esté intentando actualizar mediante el metodo POST.
+        if(repository.findById(rent.getId()).isPresent())
+            returnEmpty = true;
 
-        // Realiza las mismas comprobaciones que arriba pero para cliente.
-        if(Optional.ofNullable(rent.getClient()).isPresent())
-            if (!clientService.findOne(rent.getClient().getId()).isPresent())
-                clientService.create(rent.getClient());
+        // Se comprueba si el coche ya está alquilado para la fecha de inicio.
+        List<Rent> list = repository.findAll();
+        for(Rent r: list)
+            if(r.getStartDate().equals(rent.getStartDate()) && r.getCar().equals(rent.getCar()))
+            {
+                returnEmpty = true;
+                break;
+            }
 
+        if(returnEmpty)
+            return Optional.empty();
+        else
+        {
+            // Comprueba si el coche enviado con rent no es nulo y si no está presente en la base de datos
+            // lo crea.
+            if(Optional.ofNullable(rent.getCar()).isPresent())
+            {
+                if (!carService.findOne(rent.getCar().getId()).isPresent())
+                    carService.create(rent.getCar());
 
-        return Optional.ofNullable(repository.save(rent));
+                // Si existe coge el precio de la tarifa que esté asignada al coche, si no coge el precio que se
+                // le pasa como argumento en el DTO.
+                // Se coge el precio de la tarifa en la que tanto en tarifa como en alquiler coincide la fecha de inicio.
+                // Para que se obtenga correctamente el List que tiene todos los rates que están vinculados al coche se debe
+                // usar service.
+                Car car = carService.findOne(rent.getCar().getId()).get();
+                for(Rate r: car.getRates())
+                    if(r.getStartDate().equals(rent.getStartDate()))
+                        rent.setRentPrice(r.getPrice());
+            }
+
+            // Realiza las mismas comprobaciones que arriba pero para cliente.
+            if(Optional.ofNullable(rent.getClient()).isPresent())
+                if (!clientService.findOne(rent.getClient().getId()).isPresent())
+                    clientService.create(rent.getClient());
+
+            return Optional.ofNullable(repository.save(rent));
+        }
+
     }
 
     @Override
